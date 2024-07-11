@@ -1,6 +1,6 @@
 package com.example.kursinfo.data.di
 
-import com.example.kursinfo.data.util.RequestInterceptor
+import com.example.kursinfo.data.remote.api.CurrencyExchangeApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -9,31 +9,38 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-    private val interceptor = run {
-        val httpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.apply {
-            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        }
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
     @Provides
     @Singleton
     fun provideOkHttpClient() =
-        OkHttpClient.Builder().addInterceptor(RequestInterceptor()).addInterceptor(interceptor)
+        OkHttpClient.Builder().addInterceptor(loggingInterceptor)
+            .connectTimeout(100, TimeUnit.SECONDS)
+            .readTimeout(100, TimeUnit.SECONDS)
+            .writeTimeout(100, TimeUnit.SECONDS)
             .build()
 
-    @Singleton
     @Provides
-    fun provideRetrofit(okHttp: OkHttpClient) : Retrofit {
+    @Singleton
+    fun provideRetrofit(okHttp: OkHttpClient): Retrofit {
         return Retrofit.Builder().apply {
             addConverterFactory(GsonConverterFactory.create())
             client(okHttp)
-            baseUrl("https://belarusbank.by/api")
+            baseUrl("https://belarusbank.by/api/")
         }.build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCurrencyExchangeApi(retrofit: Retrofit): CurrencyExchangeApi {
+        return retrofit.create(CurrencyExchangeApi::class.java)
     }
 }
