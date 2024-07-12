@@ -9,7 +9,11 @@ data class CurrencyExchangeRate(
     val eurSell: String,
     val rubBuy: String,
     val rubSell: String,
-    val city: String
+    val city: String,
+    val street: String,
+    val streetType: String,
+    val homeNumber: String,
+    val filialsText: String
 )
 
 fun CurrencyExchangeRateDto.toCurrencyExchangeRate(): CurrencyExchangeRate {
@@ -20,6 +24,10 @@ fun CurrencyExchangeRateDto.toCurrencyExchangeRate(): CurrencyExchangeRate {
         eurSell = eurOut,
         rubBuy = rubIn,
         rubSell = rubOut,
-        city = name
+        city = name,
+        street = street,
+        streetType = streetType,
+        homeNumber = homeNumber,
+        filialsText = filialsText
     )
 }
