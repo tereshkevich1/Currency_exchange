@@ -1,8 +1,9 @@
-package com.example.kursinfo.data.util
+package com.example.kursinfo.data.remote.util
 
 import retrofit2.HttpException
 import retrofit2.Response
 
+/**function for handling the network response**/
 suspend fun <T : Any> handleApi(
     execute: suspend () -> Response<T>
 ): NetworkResult<T> {

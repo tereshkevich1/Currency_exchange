@@ -1,7 +1,7 @@
 package com.example.kursinfo.data.remote.data_source
 
 import com.example.kursinfo.data.remote.api.CurrencyExchangeApi
-import com.example.kursinfo.data.util.handleApi
+import com.example.kursinfo.data.remote.util.handleApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

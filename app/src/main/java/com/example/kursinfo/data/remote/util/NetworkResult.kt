@@ -1,4 +1,4 @@
-package com.example.kursinfo.data.util
+package com.example.kursinfo.data.remote.util
 
 sealed class NetworkResult<T: Any> {
     class Success<T: Any>(val data: T): NetworkResult<T>()
