@@ -10,6 +10,7 @@ import com.example.kursinfo.domain.model.CurrencyExchangeRate
 import com.example.kursinfo.domain.use_case.GetCurrencyExchangeRate
 import com.example.kursinfo.presentation.home_screen.util.ScreenUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -25,10 +26,13 @@ class HomeViewModel @Inject constructor(private val getCurrencyExchangeRate: Get
     val cityList = listOf("Брест", "Витебск", "Гомель", "Гродно", "Минск", "Могилёв")
     var selectedText by mutableStateOf(cityList[0])
 
+    private var transactionJob: Job? = null
+
     fun fetchCurrencyExchangeRates(city: String) {
         _uiState.value = ScreenUiState.Loading
+        transactionJob?.cancel()
 
-        viewModelScope.launch {
+        transactionJob = viewModelScope.launch {
             getCurrencyExchangeRate(city)
                 .collect { result ->
                     when (result) {
